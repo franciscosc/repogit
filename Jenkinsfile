@@ -1,15 +1,30 @@
-node {
+pipeline {
    
-   def fileContent = ''
-   stage('Preparation') { // for display purposes
-      // Get some code from a GitHub repository
-      git 'https://github.com/franciscosc/repogit'
-     
-   }
-   stage('Build') {
-     fileContent = readFile 'README.md'
-   }
+   agent any
+   
+   
+   stages{
+   
+  
    stage('Results') {
-      echo "''${fileContent}"
+          steps { 
+              echo "'dddddd'"
+          }
    }
+  }
+    post {
+     failure {
+         mail to: 'franciscosc@meta4.com',
+         subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+         body: "Something is wrong with ${env.BUILD_URL}"
+              }
+             
+   success {
+         mail to: 'franciscosc@meta4.com',
+         subject: "OK Pipeline: ${currentBuild.fullDisplayName}",
+         body: "URL ${env.BUILD_URL}"
+              }
+      }
+
+   
 }
